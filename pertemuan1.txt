@@ -1,2 +1,32 @@
-//Melihat seluruh database
-SHOW DATABASES;
+//Melihat Seluruh Database : SHOW DATABASES;
+//membuat Database Daru : CREATE DATABASE nama_database;
+//Masuk atau Menggunakan Database : USE pegawaisib5;
+//Membuat Tabel
+
+CREATE TABLE jenis( 
+    id int PRIMARY KEY AUTO_INCREMENT, 
+    nama varchar (30) not null unique);
+
+CREATE TABLE produk (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    nama varchar(30) NOT NULL UNIQUE,
+    harga double NOT NULL UNIQUE,
+    stok int NOT NULL,
+    idjenis int NOT NULL REFERENCES jenis(id),
+    foto varchar(30));
+
+//Untuk Melihat Detail Tabel : DESC pegawaisib5;
+//Menambah Kolom Baru : ALTER TABLE jenis ADD COLUMN IF NOT EXISTS keterangan varchar(50) AFTER nama;
+//Mengubah Nama Kolom : ALTER TABLE jenis CHANGE keterangan ket varchar(50);
+//Mengubah Tipe Data : ALTER TABLE jenis MODIFY ket TEXT AFTER nama;
+//Menghapus Kolom : ALTER TABLE jenis DROP COLUMN ket;
+//Mengubah Nama Tabel : ALTER TABLE jenis RENAME TO jenis_produk;
+
+1. Id => adalah nama kolom atau header kolom.
+2. Int => adalah tipe data angka.
+3. PRIMARY KEY => adalah kunci dari sebuah tabel.
+4. AUTO_INCREMENT => adalah key untuk otomatisasi penomoran.
+5. NOT NULL => Menandakkan kolom tersebut tidak boleh kosong jika data mulai diisi.
+6. UNIQUE => adalah key untuk kolom agar data tidak boleh sama.
+7. YES NULL => Boleh dikosongkan.
+8. REFERENCES => Merujuk pada tabel tertentu atau saling keterkaitan.
