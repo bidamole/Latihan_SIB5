@@ -1,0 +1,31 @@
+//Subquery : SELECT * FROM produk WHERE stok = (SELECT MAX(stok) FROM produk);
+//Subquery : SELECT * FROM produk WHERE stok = (SELECT MIN(stok) FROM produk);
+//Subquery : SELECT * FROM produk WHERE stok = (SELECT AVG(stok) FROM produk);
+//Klausa Distinct : SELECT DISTINCT harga_jual FROM produk;
+//Klausa Distinct : SELECT DISTINCT stok FROM produk;
+
+//Klausa Case : 
+SELECT nama, harga_jual, stok,
+    -> CASE
+    -> WHEN stok >= 5 THEN 'Cukup'
+    -> ELSE 'Kurang'
+    -> END AS keterangan //Menambahkan keterangan
+    -> FROM produk;
+
+SELECT CASE
+    -> WHEN jenis_produk_id = 1 THEN 'Elektronik'
+    -> WHEN jenis_produk_id = 2 THEN 'Furniture'
+    -> WHEN jenis_produk_id = 3 THEN 'Makanan'
+    -> WHEN jenis_produk_id = 4 THEN 'Minuman'
+    -> ELSE 'Komputer'
+    -> END AS kategori, SUM(stok) AS jml FROM produk GROUP BY jenis_produk_id;
+
+//Klausa Group BY : SELECT jenis_produk_id, SUM(harga_jual) AS total_harga_jual FROM produk GROUP BY jenis_produk_id;
+//Klausa Group By : SELECT stok, COUNT(stok) AS jumlah_stok FROM produk GROUP BY stok HAVING COUNT(stok) < 3;
+//Klausa Group By : SELECT jenis_produk_id, COUNT(jenis_produk_id) AS jumlah_jenis_id FROM produk GROUP BY jenis_produk_id HAVING COUNT(jenis_produk_id) > 3;
+
+//Mengitung Total Produk : SELECT SUM(harga_beli * stok) AS Total FROM produk;
+//Menghitung Selisih Produk : SELECT SUM(stok - min_stok) AS Selisih FROM produk;
+//Menampilkan Data Pelanggan Yang Lahirnya Antara Tahun 1980-1998 : SELECT * FROM pelanggan WHERE YEAR(tgl_lahir) BETWEEN 1980 AND 1998; //// SELECT * FROM pelanggan WHERE YEAR(tgl_lahir) = 1998;
+//Menampilkan Data Pelanggan Yang Berulang Tahun Bulan July : SELECT * FROM pelanggan WHERE MONTH(tgl_lahir) = 07;
+//Menampilkan Data Pelanggan : nama, tmp_lahir, tgl_lahir dan umur (Selisih Tahun Sekarang - Tahun Kelahiran) : SELECT nama, tmp_lahir, tgl_lahir, (YEAR(NOW()) - YEAR(tgl_lahir)) AS umur FROM pelanggan;

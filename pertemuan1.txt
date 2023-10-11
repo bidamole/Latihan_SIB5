@@ -10,7 +10,7 @@ CREATE TABLE jenis(
 CREATE TABLE produk (
     id int PRIMARY KEY AUTO_INCREMENT,
     nama varchar(30) NOT NULL UNIQUE,
-    harga double NOT NULL UNIQUE,
+    harga double NOT NULL,
     stok int NOT NULL,
     idjenis int NOT NULL REFERENCES jenis(id),
     foto varchar(30));

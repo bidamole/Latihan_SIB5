@@ -1,0 +1,26 @@
+//Menambahkan atau Insert Tanpa Column : 
+INSERT INTO jenis_produk VALUES
+('','Elektronik'), ('','Furniture'), ('','Makanan'), ('','Minuman');
+
+//Menambahkan atau Insert Dengan Column :
+INSERT INTO produk (nama, harga, stok, idjenis, foto) VALUES
+('TV',2000000,3,1,'tv.jpg'),
+('Meja',1000000,3,2,'meja.jpg'),
+('Nasi Goreng',20000,10,3,'nasi.jpg'),
+('Coca-Cola',3000,20,4,'cola.jpg'),
+('Kursi',400000,20,2,'kursi.jpg'),
+('Handphone',5000000,10,1,'hp.jpg'),
+('Sprite',4000,4,4,'sprite.jpg');
+
+//Edit atau Update : UPDATE produk SET nama = 'TV LCD', harga = 4000000 WHERE id = 1;
+//Menghapus atau Delete Baris : DELETE FROM produk WHERE id = 2;
+//Melihat atau Select Beberapa Kolom : SELECT nama, harga, stok  FROM produk;
+//Melihat atau Select Semua Kolom : SELECT * FROM `produk`;
+
+//Klausa Where : 
+1. SELECT nama, harga, stok FROM produk WHERE stok < 40;
+2. SELECT * FROM produk WHERE stok <= 10;
+
+//Klausa String : SELECT * FROM produk WHERE nama='Sprite';
+//Mengurutkan dari Terbesar ke Terkecil (Z-A) : SELECT * FROM produk ORDER BY  harga DESC;
+//Mengurutkan dari Terkecil ke Terbesar (A-Z) : SELECT * FROM produk ORDER BY  harga ASC;
