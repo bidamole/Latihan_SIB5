@@ -68,3 +68,27 @@ SELECT produk.kode, produk.nama, jenis_produk.nama AS jenis_produk
 | NULL  | NULL              | Komputer     |
 +-------+-------------------+--------------+
 11 rows in set (0.002 sec)
+
+//Mengumpulkan tabel pesanan, pelanggan dan kartu.
+
+SELECT pesanan.id, pesanan.tanggal, pesanan.total, pelanggan.kode,
+    -> pelanggan.nama, kartu.nama AS nama_kartu, kartu.diskon
+    -> FROM pesanan INNER JOIN pelanggan ON pesanan.pelanggan_id = pelanggan.id
+    -> INNER JOIN kartu ON pelanggan.kartu_id = kartu.id;
++----+------------+----------+------+-----------+---------------+--------+
+| id | tanggal    | total    | kode | nama      | nama_kartu    | diskon |
++----+------------+----------+------+-----------+---------------+--------+
+|  1 | 2015-11-04 |  9720000 | C001 | Wa Bida   | Gold Utama    |   0.05 |
+|  3 | 2015-11-04 |        0 | C005 | Sania     | Gold Utama    |   0.05 |
+| 12 | 2023-08-06 |       40 | C001 | Wa Bida   | Gold Utama    |   0.05 |
+|  6 | 2015-11-04 |        0 | C002 | Wa Jumi   | Platinum Jaya |    0.1 |
+| 10 | 2015-11-04 |        0 | C008 | Pami      | Platinum Jaya |    0.1 |
+|  2 | 2015-11-04 |    17500 | C003 | Nizam     | Silver        |  0.025 |
+|  4 | 2015-11-04 |        0 | C006 | Tanto     | Silver        |  0.025 |
+|  7 | 2015-11-04 |        0 | C003 | Nizam     | Silver        |  0.025 |
+| 11 | 2021-05-05 | 12000000 | C003 | Nizam     | Silver        |  0.025 |
+|  5 | 2015-11-04 |        0 | C009 | Tati      | Non Member    |      0 |
+|  8 | 2015-11-04 |        0 | C004 | Jamaludin | Non Member    |      0 |
+|  9 | 2015-11-04 |        0 | C007 | Hasi      | Non Member    |      0 |
++----+------------+----------+------+-----------+---------------+--------+
+12 rows in set (0.004 sec)
