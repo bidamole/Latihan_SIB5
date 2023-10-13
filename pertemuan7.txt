@@ -1,0 +1,70 @@
+1. Install Mysql Workbench
+2. Klik icon +, edit connection name dengan 'localhost'
+3. Klik file, New Model
+4. Klik mydb (buat nama database), setelah itu klik +add diagram.
+5. Buat tabel dan relasikan
+6. Setelah membuat tabel klik Database kemudian Forward Engineer -> Stored Connection = localhost.
+7. Selanjutnya di next terus sampai muncul query table, jika terdapat VISIBLE pada query table silahkan dihapus
+   alasanya karena pada database PhpMyAdmin nanti tidak akan lengkap atau tabel yang muncul 1 atau 2 saja.
+8. Setelah dihapus, kemudian close dan cek database dan table di Command Prompt atau di PhpMyAdmin.
+
+//Klausa INNER JOIN : Menguhubungkan tabel satu dengan tabel yang lain (Mengumpilkan Satu Tampilan).
+
+SELECT produk.kode, produk.nama, jenis_produk.nama AS jenis_produk
+    -> FROM produk INNER JOIN jenis_produk ON produk.jenis_produk_id = jenis_produk.id;
++-------+-------------------+--------------+
+| kode  | nama              | jenis_produk |
++-------+-------------------+--------------+
+| TV01  | Televisi 21 Inch  | Elektronik   |
+| TV02  | Televisi 40 Inch  | Elektronik   |
+| K001  | Kulkas 2 Pintu    | Elektronik   |
+| M001  | Meja Makan        | Furniture    |
+| TK001 | Teh Kotak         | Minuman      |
+| F001  | Lemari Kayu       | Furniture    |
+| F002  | Sofa              | Furniture    |
+| L001  | Leptop Asus       | Elektronik   |
+| H001  | Handphone Samsung | Elektronik   |
+| A001  | Ayam Geprek       | Makanan      |
++-------+-------------------+--------------+
+10 rows in set (0.018 sec)
+
+//Klausa INNER JOIN : Menguhubungkan tabel satu dengan tabel yang lain (Mengumpilkan Satu Tampilan), Bagian Kiri.
+
+SELECT produk.kode, produk.nama, jenis_produk.nama AS jenis_produk
+    -> FROM produk LEFT JOIN jenis_produk ON produk.jenis_produk_id = jenis_produk.id;
++-------+-------------------+--------------+
+| kode  | nama              | jenis_produk |
++-------+-------------------+--------------+
+| TV01  | Televisi 21 Inch  | Elektronik   |
+| TV02  | Televisi 40 Inch  | Elektronik   |
+| K001  | Kulkas 2 Pintu    | Elektronik   |
+| M001  | Meja Makan        | Furniture    |
+| TK001 | Teh Kotak         | Minuman      |
+| F001  | Lemari Kayu       | Furniture    |
+| F002  | Sofa              | Furniture    |
+| L001  | Leptop Asus       | Elektronik   |
+| H001  | Handphone Samsung | Elektronik   |
+| A001  | Ayam Geprek       | Makanan      |
++-------+-------------------+--------------+
+10 rows in set (0.003 sec)
+
+//Klausa INNER JOIN : Menguhubungkan tabel satu dengan tabel yang lain (Mengumpilkan Satu Tampilan), Bagian Kanan.
+
+SELECT produk.kode, produk.nama, jenis_produk.nama AS jenis_produk
+    -> FROM produk RIGHT JOIN jenis_produk ON produk.jenis_produk_id = jenis_produk.id;
++-------+-------------------+--------------+
+| kode  | nama              | jenis_produk |
++-------+-------------------+--------------+
+| TV01  | Televisi 21 Inch  | Elektronik   |
+| TV02  | Televisi 40 Inch  | Elektronik   |
+| K001  | Kulkas 2 Pintu    | Elektronik   |
+| M001  | Meja Makan        | Furniture    |
+| TK001 | Teh Kotak         | Minuman      |
+| F001  | Lemari Kayu       | Furniture    |
+| F002  | Sofa              | Furniture    |
+| L001  | Leptop Asus       | Elektronik   |
+| H001  | Handphone Samsung | Elektronik   |
+| A001  | Ayam Geprek       | Makanan      |
+| NULL  | NULL              | Komputer     |
++-------+-------------------+--------------+
+11 rows in set (0.002 sec)
