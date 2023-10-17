@@ -1,0 +1,148 @@
+----------------------------SQL Index - Tabel View (Tabel Bayangan)------------------------------
+
+// Tabel Bayangan atau Tabel Baru :
+1. CREATE VIEW lihat_vendor AS SELECT nomor, nama, kota FROM vendor;
+2. CREATE VIEW pesanan_pelanggan_kartu
+    -> AS SELECT pesanan.id, pesanan.tanggal, pesanan.total, pelanggan.kode,
+    -> pelanggan.nama, kartu.nama as nama_kartu, kartu.diskon
+    -> FROM pesanan INNER JOIN pelanggan ON pesanan.pelanggan_id = pelanggan.id
+    -> INNER JOIN kartu ON pelanggan.kartu_id = kartu.id;
+Query OK, 0 rows affected (0.009 sec)
+
+MariaDB [dbkoperasi]> show tables;
++-------------------------+
+| Tables_in_dbkoperasi    |
++-------------------------+
+| jenis_produk            |
+| kartu                   |
+| lihat_vendor            |
+| pelanggan               |
+| pembayaran              |
+| pembelian               |
+| pesanan                 |
+| pesanan_items           |
+| pesanan_pelanggan_kartu |
+| produk                  |
+| vendor                  |
++-------------------------+
+11 rows in set (0.002 sec)
+
+----------------------------SQL Index - Transaction--------------------------------------
+
+MariaDB [dbkoperasi]> START TRANSACTION; //Memulai Transaction.
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [dbkoperasi]>  INSERT INTO kartu (kode, nama, diskon, iuran) VALUES
+    -> ('PGU','Perunggu', 0.5, 2000);
+Query OK, 1 row affected (0.003 sec)
+
+MariaDB [dbkoperasi]> SELECT * FROM kartu;
++----+------+---------------+--------+--------+
+| id | kode | nama          | diskon | iuran  |
++----+------+---------------+--------+--------+
+|  1 | GOLD | Gold Utama    |   0.05 | 100000 |
+|  2 | PLAT | Platinum Jaya |    0.1 | 150000 |
+|  3 | SLV  | Silver        |  0.025 |  50000 |
+|  4 | NO   | Non Member    |      0 |      0 |
+|  5 | PGU  | Perunggu      |    0.5 |   2000 |
++----+------+---------------+--------+--------+
+5 rows in set (0.002 sec)
+
+MariaDB [dbkoperasi]> ROLLBACK; //Mengembalikan tabel dalam keadaan semula (menghapus perunggu tadi).
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [dbkoperasi]> SELECT * FROM kartu;
++----+------+---------------+--------+--------+
+| id | kode | nama          | diskon | iuran  |
++----+------+---------------+--------+--------+
+|  1 | GOLD | Gold Utama    |   0.05 | 100000 |
+|  2 | PLAT | Platinum Jaya |    0.1 | 150000 |
+|  3 | SLV  | Silver        |  0.025 |  50000 |
+|  4 | NO   | Non Member    |      0 |      0 |
++----+------+---------------+--------+--------+
+4 rows in set (0.001 sec)
+
+MariaDB [dbkoperasi]>  INSERT INTO kartu (kode, nama, diskon, iuran) VALUES
+    -> ('PGU','Perunggu', 0.5, 2000);
+Query OK, 1 row affected (0.006 sec)
+
+MariaDB [dbkoperasi]> SELECT * FROM kartu;
++----+------+---------------+--------+--------+
+| id | kode | nama          | diskon | iuran  |
++----+------+---------------+--------+--------+
+|  1 | GOLD | Gold Utama    |   0.05 | 100000 |
+|  2 | PLAT | Platinum Jaya |    0.1 | 150000 |
+|  3 | SLV  | Silver        |  0.025 |  50000 |
+|  4 | NO   | Non Member    |      0 |      0 |
+|  6 | PGU  | Perunggu      |    0.5 |   2000 |
++----+------+---------------+--------+--------+
+5 rows in set (0.001 sec)
+
+MariaDB [dbkoperasi]> COMMIT; //Menambahkan file didalam tabel secara permanen.
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [dbkoperasi]> SELECT * FROM kartu;
++----+------+---------------+--------+--------+
+| id | kode | nama          | diskon | iuran  |
++----+------+---------------+--------+--------+
+|  1 | GOLD | Gold Utama    |   0.05 | 100000 |
+|  2 | PLAT | Platinum Jaya |    0.1 | 150000 |
+|  3 | SLV  | Silver        |  0.025 |  50000 |
+|  4 | NO   | Non Member    |      0 |      0 |
+|  6 | PGU  | Perunggu      |    0.5 |   2000 |
++----+------+---------------+--------+--------+
+5 rows in set (0.003 sec)
+
+MariaDB [dbkoperasi]> ROLLBACK; //Maka jika di ROLLBACK tidak akan terhapus karena sudah di COMMIT (permanen).
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB [dbkoperasi]> SELECT * FROM kartu;
++----+------+---------------+--------+--------+
+| id | kode | nama          | diskon | iuran  |
++----+------+---------------+--------+--------+
+|  1 | GOLD | Gold Utama    |   0.05 | 100000 |
+|  2 | PLAT | Platinum Jaya |    0.1 | 150000 |
+|  3 | SLV  | Silver        |  0.025 |  50000 |
+|  4 | NO   | Non Member    |      0 |      0 |
+|  6 | PGU  | Perunggu      |    0.5 |   2000 |
++----+------+---------------+--------+--------+
+5 rows in set (0.001 sec)
+
+------------------------SQL Index - Savepoint----------------------------
+
+MariaDB [dbkoperasi]> START TRANSACTION;
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [dbkoperasi]> SAVEPOINT update_kartu; //Mengubah nama perunggu atau file
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [dbkoperasi]> UPDATE kartu set nama='Perunggu 1' WHERE id=6;
+Query OK, 1 row affected (0.017 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbkoperasi]> SELECT * FROM kartu;
++----+------+---------------+--------+--------+
+| id | kode | nama          | diskon | iuran  |
++----+------+---------------+--------+--------+
+|  1 | GOLD | Gold Utama    |   0.05 | 100000 |
+|  2 | PLAT | Platinum Jaya |    0.1 | 150000 |
+|  3 | SLV  | Silver        |  0.025 |  50000 |
+|  4 | NO   | Non Member    |      0 |      0 |
+|  6 | PGU  | Perunggu 1    |    0.5 |   2000 |
++----+------+---------------+--------+--------+
+5 rows in set (0.001 sec)
+
+MariaDB [dbkoperasi]> ROLLBACK; atau ROLLBACK to update_kartu;
+Query OK, 0 rows affected (0.003 sec)
+
+MariaDB [dbkoperasi]> SELECT * FROM kartu;
++----+------+---------------+--------+--------+
+| id | kode | nama          | diskon | iuran  |
++----+------+---------------+--------+--------+
+|  1 | GOLD | Gold Utama    |   0.05 | 100000 |
+|  2 | PLAT | Platinum Jaya |    0.1 | 150000 |
+|  3 | SLV  | Silver        |  0.025 |  50000 |
+|  4 | NO   | Non Member    |      0 |      0 |
+|  6 | PGU  | Perunggu      |    0.5 |   2000 |
++----+------+---------------+--------+--------+
+5 rows in set (0.001 sec)
