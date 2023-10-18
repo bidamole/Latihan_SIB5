@@ -1,0 +1,142 @@
+----------------------------PROCEDURE----------------------------------------
+
+1. Membuat Procedure Tanpa Parameter ================
+MariaDB [dbkoperasi]> DELIMITER $$
+MariaDB [dbkoperasi]> CREATE PROCEDURE showProduk()
+    -> BEGIN
+    -> SELECT kode,nama,stok FROM produk;
+    -> END $$
+Query OK, 0 rows affected (0.009 sec)
+
+MariaDB [dbkoperasi]> DELIMITER ;
+MariaDB [dbkoperasi]> CALL showProduk();
+
+2. Membuat Procedure Menggunakan Parameter =============
+MariaDB [dbkoperasi]> DELIMITER $$
+MariaDB [dbkoperasi]> CREATE PROCEDURE showProdukElektronik(id int)
+    -> BEGIN
+    -> SELECT * FROM produk WHERE jenis_produk_id = id;
+    -> END $$
+Query OK, 0 rows affected (0.007 sec)
+
+MariaDB [dbkoperasi]> DELIMITER ;
+MariaDB [dbkoperasi]> CALL showProdukElektronik(1);
+
+3. Membuat Procedure Dengan Banyak Parameter ==============
+MariaDB [dbkoperasi]> DELIMITER $$
+MariaDB [dbkoperasi]> CREATE PROCEDURE inputPesanan(
+    -> tanggal date, total double, pelanggan_id int
+    -> )
+    -> BEGIN
+    -> INSERT INTO pesanan (tanggal, total, pelanggan_id) VALUES
+    -> (tanggal, total, pelanggan_id);
+    -> END $$
+Query OK, 0 rows affected (0.020 sec)
+
+MariaDB [dbkoperasi]> DELIMITER ;
+MariaDB [dbkoperasi]> CALL inputPesanan('2015-11-04',30000,9);
+Query OK, 1 row affected (0.028 sec)
+
+MariaDB [dbkoperasi]> SELECT * FROM pesanan;
+
+4. Mengecek Procedure =======================
+MariaDB [dbkoperasi]> SELECT routine_name, routine_type, routine_schema
+    -> FROM information_schema.routines WHERE routine_type = 'PROCEDURE'
+    -> AND routine_schema = 'dbkoperasi';
++----------------------+--------------+----------------+
+| routine_name         | routine_type | routine_schema |
++----------------------+--------------+----------------+
+| inputPesanan         | PROCEDURE    | dbkoperasi     |
+| showProduk           | PROCEDURE    | dbkoperasi     |
+| showProdukElektronik | PROCEDURE    | dbkoperasi     |
++----------------------+--------------+----------------+
+3 rows in set (0.035 sec)
+
+5. Membuat Procedure Dengan Return Value ==============
+MariaDB [dbkoperasi]> DELIMITER $$
+MariaDB [dbkoperasi]> CREATE PROCEDURE totalharga(
+    -> in harga double, in jml int, out total double)
+    -> BEGIN
+    -> SET total = harga * jml;
+    -> SELECT @total;
+    -> END $$
+Query OK, 0 rows affected (0.014 sec)
+
+MariaDB [dbkoperasi]> DELIMITER ;
+MariaDB [dbkoperasi]> CALL totalharga(25000,4, @totalharga);
+
+MariaDB [dbkoperasi]> SELECT @totalharga;
+
+6. UPDATE ==================
+MariaDB [dbkoperasi]> DELIMITER $$
+MariaDB [dbkoperasi]> CREATE PROCEDURE pro_naik(
+    -> IN jenis_produk INT,
+    -> IN persentasi_kenaikan INT)
+    -> BEGIN
+    -> UPDATE produk SET harga_jual = harga_jual + (harga_jual * persentasi_kenaikan /100)
+    -> WHERE jenis_produk_id = jenis_produk;
+    -> END $$
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [dbkoperasi]> SELECT nama,harga_jual,jenis_produk_id FROM produk;
+    -> END $$
+
+MariaDB [dbkoperasi]> DELIMITER ;
+MariaDB [dbkoperasi]> SELECT nama,harga_jual,jenis_produk_id FROM produk;
+
+MariaDB [dbkoperasi]> CALL pro_naik(5, 4);
+Query OK, 4 rows affected (0.015 sec)
+
+MariaDB [dbkoperasi]> SELECT nama,harga_jual,jenis_produk_id FROM produk;
+
+-------------------------------FUNCTION--------------------------------------
+
+1. MariaDB [dbkoperasi]> USE dbpos;
+Database changed
+MariaDB [dbpos]> DELIMITER $$
+MariaDB [dbpos]> CREATE FUNCTION umur(tgl_lahir DATE)
+    -> RETURNS INT
+    -> BEGIN
+    -> DECLARE umur INT;
+    -> SET umur = YEAR(CURDATE()) - YEAR(tgl_lahir);
+    -> RETURN umur;
+    -> END $$
+Query OK, 0 rows affected (0.011 sec)
+
+MariaDB [dbpos]> DELIMITER ;
+MariaDB [dbpos]> SELECT * FROM pelanggan;
+MariaDB [dbpos]> SELECT kode, nama, jk, umur(tgl_lahir) AS umur FROM pelanggan;
+
+------------------------------------------TRIGGER-----------------------------------------------------------
+
+1. ALTER TABLE pembayaran ADD status_pembayaran varchar(25);
+Query OK, 0 rows affected (0.123 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbkoperasi]> desc pembayaran;
+
+MariaDB [dbkoperasi]> DELIMITER $$
+MariaDB [dbkoperasi]> CREATE TRIGGER cek_pembayaran BEFORE INSERT ON pembayaran
+    -> FOR EACH ROW
+    -> BEGIN
+    -> DECLARE total_bayar DECIMAL(10,2);
+    -> DECLARE total_pesanan DECIMAL(10,2);
+    -> SELECT SUM(jumlah) INTO total_bayar FROM pembayaran WHERE pesanan_id = NEW.pesanan_id;
+    -> SELECT total INTO total_pesanan FROM pesanan WHERE id = NEW.pesanan_id;
+    -> IF total_bayar + NEW.jumlah >= total_pesanan THEN
+    -> SET NEW.status_pembayaran  = 'Lunas';
+    -> END IF;
+    -> END $$
+Query OK, 0 rows affected (0.019 sec)
+
+MariaDB [dbkoperasi]> DELIMITER ;
+MariaDB [dbkoperasi]> SELECT * FROM pembayaran;
+
+MariaDB [dbkoperasi]> INSERT INTO pembayaran (nokuitansi, tanggal, jumlah, ke, pesanan_id, status_pembayaran) VALUES
+    -> ('MD002','2023-10-10',30000,1,9,''),
+    -> ('MD003','2023-10-10',30000,1,11,''),
+    -> ('MD004','2023-10-10',30000,1,2,'');
+Query OK, 3 rows affected (0.011 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [dbkoperasi]> SELECT * FROM pembayaran;
